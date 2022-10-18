@@ -1,4 +1,4 @@
-import { DOM } from './utils/dom.js';
+import { DOM } from '../utils/dom.js';
 
 const SELECTORS = {
 	APP: 'app',
@@ -7,6 +7,7 @@ const SELECTORS = {
 	ARRIVAL_STATION_NAME_INPUT: 'arrival-station-name-input',
 	SEARCH_TYPE: 'search-type',
 	SEARCH_BUTTON: 'search-button',
+	RESULT_SECTION: 'result-section',
 };
 
 const SEARCH_TYPES = {
@@ -35,14 +36,29 @@ const TEMPLATES = {
     <br/>
     <button id=${SELECTORS.SEARCH_BUTTON}>길 찾기</button>
     </form>
-    <div></div>
+    <section id=${SELECTORS.RESULT_SECTION}></section>
     `,
+	RESULT_SECTION: ({ distance, time, route }) => `
+	<h1>결과</h1>
+	<table border="1">
+	<tr>
+	<td>총 거리</td>
+	<td>총 소요시간</td>
+	</tr>
+	<tr>
+	<td>${distance} km</td>
+	<td>${time} 분</td>
+	</tr>
+	<tr>
+	<td colspan="2">${route}</td>
+	</tr>
+	</table>
+	`,
 };
 
 export class View {
 	constructor() {
 		this.renderInit();
-		this.registerSearchButtonEvent();
 	}
 
 	renderInit() {
@@ -55,13 +71,17 @@ export class View {
 		DOM(SELECTORS.MAIN).insertAdjacentHTML('beforeend', TEMPLATES.PATH_SECTION);
 	}
 
-	registerSearchButtonEvent() {
+	renderResult(result) {
+		DOM(SELECTORS.RESULT_SECTION).innerHTML = TEMPLATES.RESULT_SECTION(result);
+	}
+
+	registerSearchButtonEvent(searchFn) {
 		DOM(SELECTORS.SEARCH_BUTTON).addEventListener('click', e => {
 			e.preventDefault();
 			const type = this.getType();
 			const start = DOM(SELECTORS.DEPARTURE_STATION_NAME_INPUT).value;
 			const end = DOM(SELECTORS.ARRIVAL_STATION_NAME_INPUT).value;
-			console.log(start, end, type);
+			searchFn(start, end, type);
 		});
 	}
 
