@@ -1,4 +1,5 @@
 import { DOM } from '../utils/dom.js';
+import { SEARCH_TYPES } from '../constants.js';
 
 const SELECTORS = {
 	APP: 'app',
@@ -8,11 +9,6 @@ const SELECTORS = {
 	SEARCH_TYPE: 'search-type',
 	SEARCH_BUTTON: 'search-button',
 	RESULT_SECTION: 'result-section',
-};
-
-const SEARCH_TYPES = {
-	DISTANCE: 'distance',
-	TIME: 'time',
 };
 
 const TEMPLATES = {

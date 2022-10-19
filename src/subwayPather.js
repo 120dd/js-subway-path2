@@ -1,4 +1,5 @@
 import Dijkstra from './utils/Dijkstra.js';
+import { SEARCH_TYPES } from './constants.js';
 
 const stations = [
 	{ start: '교대', end: '강남', distance: 2, time: 3 },
@@ -8,8 +9,14 @@ const stations = [
 export class SubwayPather {
 	constructor() {
 		this.dijkstra = new Dijkstra();
+		this.dijkstraByTime = new Dijkstra();
 		this.stationData = stations;
+		this.addEdges();
+	}
+
+	addEdges() {
 		this.addEdgeByDistance();
+		this.addEdgeByTime();
 	}
 
 	addEdgeByDistance() {
@@ -18,11 +25,24 @@ export class SubwayPather {
 		});
 	}
 
-	getResult(start, end) {
-		const result = this.dijkstra.findShortestPath(start, end);
+	addEdgeByTime() {
+		this.stationData.forEach(station => {
+			this.dijkstraByTime.addEdge(station.start, station.end, station.time);
+		});
+	}
+
+	getResult(start, end, type) {
+		let result = this.dijkstra.findShortestPath(start, end);
+		if (type === SEARCH_TYPES.TIME) {
+			result = this.dijkstraByTime.findShortestPath(start, end);
+		}
 		const route = result.join('→');
-		let distance = 0;
-		let time = 0;
+		const { distance, time } = this.getResultInfo(result);
+		return { distance, time, route };
+	}
+
+	getResultInfo(result) {
+		const resultInfo = { distance: 0, time: 0 };
 		result.forEach((station, idx) => {
 			const edgeData = this.stationData.find(
 				v =>
@@ -30,10 +50,10 @@ export class SubwayPather {
 					(v.end === station && v.start === result[idx + 1]),
 			);
 			if (edgeData) {
-				distance += edgeData.distance;
-				time += edgeData.time;
+				resultInfo.distance += edgeData.distance;
+				resultInfo.time += edgeData.time;
 			}
 		});
-		return { distance, time, route };
+		return resultInfo;
 	}
 }
