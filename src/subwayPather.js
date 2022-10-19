@@ -1,10 +1,6 @@
 import Dijkstra from './utils/Dijkstra.js';
 import { SEARCH_TYPES } from './constants.js';
-
-const stations = [
-	{ start: '교대', end: '강남', distance: 2, time: 3 },
-	{ start: '강남', end: '역삼', distance: 2, time: 3 },
-];
+import { stations } from './data.js';
 
 export class SubwayPather {
 	constructor() {
@@ -31,7 +27,7 @@ export class SubwayPather {
 		});
 	}
 
-	getResult(start, end, type) {
+	getResult({ start, end, type }) {
 		let result = this.dijkstra.findShortestPath(start, end);
 		if (type === SEARCH_TYPES.TIME) {
 			result = this.dijkstraByTime.findShortestPath(start, end);

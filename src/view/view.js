@@ -77,11 +77,15 @@ export class View {
 			const type = this.getType();
 			const start = DOM(SELECTORS.DEPARTURE_STATION_NAME_INPUT).value;
 			const end = DOM(SELECTORS.ARRIVAL_STATION_NAME_INPUT).value;
-			searchFn(start, end, type);
+			searchFn({ start, end, type });
 		});
 	}
 
 	getType() {
-		return document.querySelector(`input[name=${SELECTORS.SEARCH_TYPE}]:checked`).value;
+		return document.querySelector(`input[name=${SELECTORS.SEARCH_TYPE}]:checked`)?.value;
+	}
+
+	alert(msg) {
+		alert(msg);
 	}
 }
